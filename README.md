@@ -1,46 +1,35 @@
 <h1 align="center">FieldCam Buzzer Switcher</h1>
 <p align="center">Switch OBS field cameras when a VEX IQ match ends.</p>
-<p align="center"><a href="https://github.com/robostem-foundation/buzzer-switcher/releases"><strong>Windows releases</strong></a> · <a href="#quick-start">Quick start</a> · <a href="#build-from-source">Build from source</a></p>
-<p align="center"><sub>Windows 10/11 (x64) · OBS Studio 28 or later</sub></p>
-
 <p align="center">
-  <img src="docs/images/fieldcam-preview.png" width="490" alt="Layout preview of the FieldCam Windows app, showing OBS connection fields, scene order, buzzer settings, and Listen Only, Arm Switching, and Stop buttons">
+  <strong>Windows 10/11 (x64)</strong> · <strong>OBS Studio 28+</strong><br>
+  <a href="https://github.com/robostem-foundation/buzzer-switcher/releases">Windows releases</a> · <a href="docs/setup.md">Setup guide</a> · <a href="docs/release-notes.md">Release notes</a>
 </p>
-<p align="center"><sub>Layout preview, not a screenshot from Windows.</sub></p>
+<p align="center">
+  <img src="docs/images/fieldcam-preview.png" width="600" alt="FieldCam window preview with OBS connection, scene order, buzzer settings, and Listen Only, Arm Switching, and Stop buttons"><br>
+  <sub>Layout preview based on the Windows app.</sub>
+</p>
 
-## Quick start
+## Get started
 
-1. Download and extract the Windows ZIP. Open **FieldCam Buzzer Switcher.exe**. There's no installer. The EXE is unsigned.
-2. In OBS, open **Tools → WebSocket Server Settings** and enable the server. Keep authentication on. If OBS and FieldCam run on the same PC, use `127.0.0.1:4455` in FieldCam and enter the WebSocket password shown by OBS.
-3. Click **Load OBS Scenes**. Add your field scenes in match order. For two alternating fields, your list might be `ICC Field → RoboSTEM Field`. FieldCam wraps from the last scene back to the first.
-4. Click **Listen Only** before a full practice match. Look for **Start sound matched**, then **End sound matched**. Listen Only does not switch scenes.
-5. Put a field scene on OBS Program and click **Arm Switching** before the next start buzzer. Test it off-air first. OBS uses its current scene transition.
-
-> [!TIP]
-> If the level meter stays flat, check where Tournament Manager plays its sound. FieldCam listens to the default Windows playback device on the PC running FieldCam, not the OBS audio mixer or a microphone.
+1. Extract the Windows ZIP and open **FieldCam Buzzer Switcher.exe**. No installer is needed.
+2. In OBS, go to **Tools → WebSocket Server Settings** and enable the server. In FieldCam, use `127.0.0.1:4455` if OBS is on the same PC and uses the default port. Enter the OBS WebSocket password.
+3. Click **Load OBS Scenes** and put your field scenes in match order. Run a full practice match in **Listen Only**. Look for **Start sound matched** and **End sound matched** before you try **Arm Switching** off-air.
 
 ## What triggers a switch?
 
-| Setting | Default |
-| --- | --- |
-| Require start buzzer | On |
-| Time from start to end | 45–70 seconds |
-| Delay after the end buzzer | 2 seconds |
-| Match threshold | 88% |
+FieldCam advances to the next scene in your list and wraps back to the first. By default, it accepts an end buzzer only **45–70 seconds after the start buzzer**. The switch starts **two seconds after the end buzzer begins** and uses the transition already selected in OBS. Both timings are adjustable.
 
-An end buzzer outside the match window won't switch scenes. If you arm midway through a match, FieldCam waits for the next start buzzer. It also skips the switch if the live scene isn't in your list, and cancels if a different scene is live when the delay ends.
+Click **Stop** during Skills, breaks, or when your fields are out of order. FieldCam can't tell fields or match types apart if they use the same sounds. See the [setup guide](docs/setup.md) for the full test and default settings.
 
-FieldCam follows your scene order. It can't identify fields or tell Skills apart from teamwork if they use the same sounds. Hit **Stop** during breaks, Skills, or when matches don't follow the order you set.
+## Audio and settings
 
-## What it connects to
+FieldCam listens to the default Windows playback device, not the OBS mixer or a microphone. It processes audio on your PC without recording it. It uses installed Tournament Manager buzzer sounds when available, or built-in fingerprints. No TM API key is needed.
 
-FieldCam processes audio on your PC and doesn't record it. It doesn't connect to Tournament Manager or need a TM API key. It loads local `Start.wav` and `Stop.wav` from Tournament Manager when available and uses built-in sound fingerprints otherwise. No original buzzer recordings are included. You can load a custom end WAV.
-
-FieldCam keeps one OBS WebSocket connection open across switches. It saves your scene order and timing on exit, but not your password or armed state.
+FieldCam keeps one WebSocket connection open to OBS. It saves your scene order and timing, but never saves the OBS password or arms itself on startup.
 
 ## Build from source
 
-Use Go 1.24 or later. From PowerShell:
+Use Go 1.24 or later. From the repository root in PowerShell:
 
 ```powershell
 go test ./...
@@ -49,7 +38,5 @@ $env:GOARCH = 'amd64'
 $env:CGO_ENABLED = '0'
 go build -trimpath -ldflags="-H=windowsgui -s -w" -o "FieldCam Buzzer Switcher.exe" ./app
 ```
-
-The tests cover buzzer timing, scene order, and OBS WebSocket behavior. Audio capture uses Windows WASAPI loopback.
 
 An independent RoboSTEM Foundation project. Not affiliated with VEX Robotics or OBS Studio.
