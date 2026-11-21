@@ -17,10 +17,10 @@ import (
 	"time"
 )
 
-//go:embed iq-end-fingerprint.json
+//go:embed cues/iq-end-fingerprint.json
 var officialJSON []byte
 
-//go:embed iq-start-fingerprint.json
+//go:embed cues/iq-start-fingerprint.json
 var officialStartJSON []byte
 
 const officialName = "Built-in: official VEX IQ end cue"
