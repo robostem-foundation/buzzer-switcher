@@ -1,0 +1,32 @@
+FieldCam Buzzer Switcher
+Windows 10/11 x64, OBS Studio 28 or newer
+
+1. Extract the ZIP. Run FieldCam Buzzer Switcher.exe.
+2. Put in the OBS WebSocket address and password. If OBS is on this
+   PC and uses the default port, use 127.0.0.1:4455. In OBS, see
+   Tools > WebSocket Server Settings. Keep authentication on.
+3. Click Load OBS Scenes. Choose a scene from the drop-down and click
+   Add Scene. Use Move Up, Move Down, and Remove to set the order.
+   The switcher follows that order, then loops back to the first
+   scene. It ignores buzzers if the live scene isn’t in the list.
+4. Click Listen Only before a full practice match. The log should say
+   “Start sound matched” and then “End sound matched.” A short
+   start/stop should log “End ignored” if it uses the same end buzzer.
+   Listen Only never changes the live scene.
+5. To test switching off-air, click Arm Switching before the start
+   buzzer. It changes to the next scene after the delay and uses
+   the transition already selected in OBS.
+
+Defaults: 2 seconds from the end buzzer, 88% match threshold, and a
+start buzzer 45–70 seconds before the end buzzer. If you open the
+app partway through a match, it won’t switch on that match's end.
+The time check does not tell fields or match types apart. Disarm
+before Skills, breaks, or when the fields won’t follow your order.
+Click Stop to cancel waiting. Only run one switcher at a time.
+
+The app listens to the default Windows playback output on the PC
+where it runs. It does not change Tournament Manager or record
+audio. Hover over a small info icon for help.
+
+The scene order and timing settings are saved on exit. The OBS password
+is not saved, and the app always opens stopped.
